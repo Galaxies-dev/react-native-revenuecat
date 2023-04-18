@@ -1,20 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './app/pages/Home';
+import 'expo-dev-client';
+import { RevenueCatProvider } from './app/providers/RevenueCatProvider';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <RevenueCatProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="RevenueCat App" component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RevenueCatProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
