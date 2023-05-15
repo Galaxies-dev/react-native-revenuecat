@@ -42,9 +42,13 @@ export const RevenueCatProvider = ({ children }: any) => {
       // Use more logging during debug if want!
       Purchases.setLogLevel(LOG_LEVEL.DEBUG);
 
+      // Listen for customer updates
+      Purchases.addCustomerInfoUpdateListener(async (info) => {
+        updateCustomerInformation(info);
+      });
+
       // Load all offerings and the user object with entitlements
       await loadOfferings();
-      await loadCustomerInfo();
     };
     init();
   }, []);
@@ -58,9 +62,7 @@ export const RevenueCatProvider = ({ children }: any) => {
   };
 
   // Update user state based on previous purchases
-  const loadCustomerInfo = async () => {
-    const customerInfo = await Purchases.getCustomerInfo();
-
+  const updateCustomerInformation = async (customerInfo: CustomerInfo) => {
     const newUser: UserState = { cookies: user.cookies, items: [], pro: false };
 
     if (customerInfo?.entitlements.active['Epic Wand'] !== undefined) {
@@ -87,9 +89,6 @@ export const RevenueCatProvider = ({ children }: any) => {
       if (pack.product.identifier === 'rca_299_consume') {
         setUser({ ...user, cookies: (user.cookies += 5) });
       }
-
-      // Update user state based on previous purchases
-      loadCustomerInfo();
     } catch (e: any) {
       if (!e.userCancelled) {
         alert(e);
